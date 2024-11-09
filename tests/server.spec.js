@@ -49,34 +49,73 @@ describe('GET /cafes/:id', () => {
 describe('POST /cafes', () => {
     it('debe agregar un café correctamente y devolver un status 201', async () => {
       const newCafe = {
-        id: 5,   // Cambié el id para evitar conflicto con los existentes
+        id: 5,
         nombre: "Latte"
       };
   
       const response = await request(app).post('/cafes').send(newCafe);
   
-      // Verificar que el código de estado sea 201
       expect(response.status).toBe(201);
   
-      // Verificar que el café agregado esté en la respuesta
       expect(response.body).toEqual(expect.arrayContaining([newCafe]));
     });
   
     it('debe devolver un status 400 si ya existe un café con el mismo id', async () => {
       const newCafe = {
-        id: 1,  // Usamos un id que ya existe
+        id: 1, 
         nombre: "Capuccino"
       };
   
       const response = await request(app).post('/cafes').send(newCafe);
   
-      // Verificar que el código de estado sea 400
       expect(response.status).toBe(400);
   
-      // Verificar que el mensaje de error es el esperado
       expect(response.body.message).toBe("Ya existe un cafe con ese id");
     });
   });
+
+//04
+describe('PUT /cafes/:id', () => {
+    it('debe actualizar un café correctamente y devolver un status 200', async () => {
+      const updatedCafe = {
+        id: 2,  
+        nombre: "Latte Macchiato"
+      };
+  
+      const response = await request(app).put('/cafes/2').send(updatedCafe);
+  
+      expect(response.status).toBe(200);
+  
+      expect(response.body).toEqual(expect.arrayContaining([updatedCafe]));
+    });
+  
+    it('debe devolver un status 400 si el id en los parámetros no coincide con el id del cuerpo', async () => {
+      const updatedCafe = {
+        id: 2, 
+        nombre: "Mocha"
+      };
+  
+      const response = await request(app).put('/cafes/3').send(updatedCafe);
+  
+      expect(response.status).toBe(400);
+  
+      expect(response.body.message).toBe("El id del parámetro no coincide con el id del café recibido");
+    });
+  
+    it('debe devolver un status 404 si el café no existe', async () => {
+      const updatedCafe = {
+        id: 999,  
+        nombre: "Flat White"
+      };
+  
+      const response = await request(app).put('/cafes/999').send(updatedCafe);
+  
+      expect(response.status).toBe(404);
+  
+      expect(response.body.message).toBe("No se encontró ningún café con ese id");
+    });
+  });
+  
   
   
 

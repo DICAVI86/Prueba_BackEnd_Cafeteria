@@ -21,4 +21,32 @@ describe('GET /cafes', () => {
   });
 
 
+//02
+describe('GET /cafes/:id', () => {
+  it('debe devolver un status 200 y el café correspondiente cuando el id es válido', async () => {
+
+    const response = await request(app).get('/cafes/1');
+
+    expect(response.status).toBe(200);
+
+    const cafe = response.body;
+    expect(cafe).toHaveProperty('id');
+    expect(cafe.id).toBe(1); 
+    expect(cafe).toHaveProperty('nombre');
+  });
+
+  it('debe devolver un status 404 cuando el id no es válido', async () => {
+
+    const response = await request(app).get('/cafes/999');
+
+    expect(response.status).toBe(404);
+
+    expect(response.body.message).toBe('No se encontró ningún cafe con ese id');
+  });
+});
+
+//03
+
+
+
   
